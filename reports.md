@@ -1,6 +1,6 @@
 
 
-![image-20210906200151519](reports.assets/image-20210906200151519.png)
+![image-20210906200151519](out/figs/likelihood.PNG)
 
 [toc]
 
@@ -20,7 +20,7 @@ In terms of labeling, this project uses the triple barrier labeling as described
 
 The asset explored in this project is the Shanghai Security Exchange Composite Index (SH0000001), the target variable is the triple barrier label mentioned above, and the features include mainly technical variables and some external variables which take the trend of  S&P 500 Index, the SGX FTSE China A50 Index Futures Contract, and the Nanhua Commodity Index into account. 
 
-![000001.SH_label](code/out/figs/000001.SH_label.jpg)
+![000001.SH_label](out/figs/000001.SH_label.jpg)
 
 ​						Figure 1: triple barrier labeling of the SH000001 index
 
@@ -42,7 +42,7 @@ Windows split the whole sample period into smaller ones, and a model is trained 
 
 A single fixed window is roughly the same as the one step train-test split. A model is trained on the training set, then it is used to generate predictions on the test set. One thing needs attention is that lags are used to avoid data snooping bias. As the label uses future closing price, at the end of the training set, the future five days' closing prices are already known. To make the predictions practicable, these five days should be excluded from the test set. In the case of regression, as the target variable is the next day's closing price, a one-day lag is used between the end of the training set and the beginning of the test set. The structure of the single fixed window is shown in Figure 2. 
 
-![fixed_window](code/out/figs/fixed_window.png)
+![fixed_window](out/figs/fixed_window.png)
 
 ​						Figure 2: one fixed window
 
@@ -52,7 +52,7 @@ The single fixed window can be the basic element of rolling windows and recursiv
 
 
 
-![rolling_window](code/out/figs/rolling_window.png)
+![rolling_window](out/figs/rolling_window.png)
 
 ​						Figure 3: rolling window
 
@@ -60,7 +60,7 @@ The single fixed window can be the basic element of rolling windows and recursiv
 
 Recursive windows are very similar to the rolling ones. The only difference between the two is that the recursive windows expand the training set as time goes by, for all of the windows have the same begin index of the training set. Figure 4 illustrates those recursive windows. 
 
-![recursive_window](code/out/figs/recursive_window.png)
+![recursive_window](out/figs/recursive_window.png)
 
 ​						Figure 4: recursive window
 
@@ -86,7 +86,7 @@ mlogloss = -\frac{1}{M}\sum_{m=1}^{M}\frac{1}{N}\sum_{n=1}^{N}(y_{n,m}log(\hat y
 $$
 Figure 5 plots the value of mean `mlogloss` on the training set and validation set. The red vertical line is the best `num_boost_round` chosen by the validation process. As can be seen, the loss function does not decrease well on the test set, suggesting overfitting to the training data. 
 
-![fixed_one_class_tuning](code/out/figs/fixed_one_class_tuning.png)
+![fixed_one_class_tuning](out/figs/fixed_one_class_tuning.png)
 
 ​				Figure 5: mlogloss on the train and validation dataset.
 
@@ -94,7 +94,7 @@ Figure 5 plots the value of mean `mlogloss` on the training set and validation s
 
 Figure 6 plots the feature importance of the model. Features with higher feature importance are regarded as more useful when making predictions. As can be seen, technical variables like`bias5`, external variables like `SPX_pct` and `north_money` all have played a large role. 
 
-![fixed_one_class_importance](code/out/figs/fixed_one_class_importance.png)
+![fixed_one_class_importance](out/figs/fixed_one_class_importance.png)
 
 ​				Figure 6: feature importance of the model
 
@@ -108,7 +108,7 @@ The results of XGBoost classification using a single fixed window is not satisfy
 
 Moving window classifying dose not improve the accuracy on the test set significantly, with an in sample accuracy of 100.00% on average and an out of sample accuracy of 43.22% on average. Figure 8 displays the out of sample prediction results. In contrast to figure 1, red dots appear at the rising states, which contradicts its original implication of a falling trend.
 
-![rolling_xgbpredictLabel](code/out/figs/rolling_xgbpredictLabel.jpg)
+![rolling_xgbpredictLabel](out/figs/rolling_xgbpredictLabel.jpg)
 
 ​			Figure 8: rolling window predictions on the test set
 
@@ -116,13 +116,13 @@ Moving window classifying dose not improve the accuracy on the test set signific
 
 The recursive window has similar performance as the previous two cases. The model has an average in sample accuracy of 100.00% and an average out of sample accuracy of 43.47%. Figure 9 plots the classification results of the test set data. As can be seen from the plot, green dots do not appear to be buying point, for some of them cluster at the falling period.
 
-![recursive_xgbpredictLabel](code/out/figs/recursive_xgbpredictLabel.jpg)
+![recursive_xgbpredictLabel](out/figs/recursive_xgbpredictLabel.jpg)
 
 ​			Figure 9: recursive window predictions on the test set
 
 As the length of recursive windows increases over time, figure 10 plots the out of sample accuracy on every window to inspect whether the window length influences the classification performance. The plots suggest that the performance is not stable across all windows. The out of sample accuracy can be as high as 80% and as low as 10%, which is much worse than random guesses. 
 
-![recursive_mean_acc](code/out/figs/recursive_mean_acc.jpeg)
+![recursive_mean_acc](out/figs/recursive_mean_acc.jpeg)
 
 ​			Figure 10: out of sample accuracy of each window
 
@@ -134,13 +134,13 @@ As all three forms of classification do not yield satisfying results, XGBoost Re
 
 As before, the XGBoost regression is run on a single fixed window and the best `num_boost_round` is chosen from a five-fold validation with early-stop. Figure 11 plots the rooted mean square error on the train and validation dataset.
 
-![fixed_one_reg_tuning](code/out/figs/fixed_one_reg_tuning.png)
+![fixed_one_reg_tuning](out/figs/fixed_one_reg_tuning.png)
 
 Figure 11: the rooted mean square error on the train and validation dataset
 
 Feature importance is shown by figure 12, where variables like `open`, `SPX_pct_chg`, lags of `XIN9_pct_chg`, and etc. have larger impact to the predictions. 
 
-![fixed_one_reg_importance](code/out/figs/fixed_one_reg_importance.png)
+![fixed_one_reg_importance](out/figs/fixed_one_reg_importance.png)
 
 ​			Figure 12: feature importance of the model
 
@@ -158,7 +158,7 @@ Table 1: model performance
 The fitted plot, as shown by figure 13, further visualizes the model's performance. The  blue dots fit well at the beginning of the test set. However, as time went by, its predictive capability deteriorates quickly. The phenomenon, normal as it is, highlights the importance of retraining the model timely. 
 
 
-![fixed_one_xgbpredictClose](code/out/figs/fixed_one_xgbpredictClose.jpg)
+![fixed_one_xgbpredictClose](out/figs/fixed_one_xgbpredictClose.jpg)
 
 ​			Figure 13: fixed window predictions on the test set
 
@@ -178,7 +178,7 @@ Table 2: model performance
 
 Figure 14 plots the predicted value with the true ones, which also demonstrates its improvement over the fixed one window.
 
-![rolling_xgbpredictClose](code/out/figs/rolling_xgbpredictClose.jpg)
+![rolling_xgbpredictClose](out/figs/rolling_xgbpredictClose.jpg)
 
 ​			Figure 14: rolling window predictions on the test set
 
@@ -198,7 +198,7 @@ Table 3: model performance
 
 The fitted dots in figure 15 appear to lie more closely with its realized values. 
 
-![recursive_xgbpredictClose](code/out/figs/recursive_xgbpredictClose.jpg)
+![recursive_xgbpredictClose](out/figs/recursive_xgbpredictClose.jpg)
 
 ​			Figure 15: recursive window predictions on the test set
 
@@ -206,13 +206,13 @@ The fitted dots in figure 15 appear to lie more closely with its realized values
 
 To form signals of buying and selling, triple barrier labelling is again applied to the out of sample predictions of XGBoost regressor. After labelling the predicted next day's closing price, the predicted label is again compared with its original ones to calculate accuracy. Figure 16 plots the accuracy of triple barrier classification based on rolling window predictions. The later formed labels have an out of sample accuracy of 44.60%, slightly improving previous performance. 
 
-![XGB_reg_rw_tbplot](code/out/figs/XGB_reg_rw_tbplot.jpg)
+![XGB_reg_rw_tbplot](out/figs/XGB_reg_rw_tbplot.jpg)
 
 ​			Figure 16: triple barrier label based of rolling window XGBoost regression
 
 Figure 17 plots triple barrier labels which are formed on the recursive window regression's results. The result is rather satisfactory as it reaches an out of sample trinary classification accuracy of 53.19%. As can be seen from the plot, sequence of green dots appear at the rising sates while the red ones cluster at the falling states, validating its reasonability. 
 
-![XGB_reg_re_tbplot](code/out/figs/XGB_reg_re_tbplot.jpg)
+![XGB_reg_re_tbplot](out/figs/XGB_reg_re_tbplot.jpg)
 
 Figure 17: triple barrier label based of recursive window XGBoost regression
 
@@ -220,7 +220,7 @@ To further validate its predictive capability, backtest is conducted based on th
 
 Figure 18 plots the net value of the strategy. As can be seen clearly, it outperform the buy and hold strategy significantly, and its return tend to be persistent, accumulating steadily overtime. The strategy has an annualized Sharpe ratio (SR) of 1.29 and a max drawdown ratio (MDR) of 8.39%, indicating its superiority. 
 
-![backtest-reg-re](code/out/figs/backtest-reg-re.png)
+![backtest-reg-re](out/figs/backtest-reg-re.png)
 
 Figure 18: strategy performance of XGBoost regressor on recursive windows
 

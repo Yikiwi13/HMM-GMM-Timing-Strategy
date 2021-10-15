@@ -1,8 +1,6 @@
-# HMM-GMM-Timing-Strategy
+# HMM-Predictions
 ## 
-## XGBoost Timing Strategy
-### XGBoost Classifier
-### XGBoost Regressor
-## LSTM Timing Strategy
-### LSTM Classifier
-### LSTM Regressor
+## HMM-GMM-BASE
+## HMM-XGBoost-BASE
+## Rolling Window With State Transfer Matrix
+## Rolling Window With Lagged Observation Sequence

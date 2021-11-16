@@ -98,7 +98,7 @@ Figure 6 plots the feature importance of the model. Features with higher feature
 
 The results of XGBoost classification using a single fixed window are not satisfying. As shown in figure 7, at the beginning of the test set, the model has given relatively reasonable predictions, where green dots denote up, and blue ones represent oscillation. However, the following forecasts deteriorate quickly as red dots (falling) dominate the results. The model suffers from a severe overfit problem, with an in-sample accuracy of 100.00% and an out-of-sample accuracy of 43.00%.
 
-![fixed_one_xgbpredictLabel](code/out/figs/fixed_one_xgbpredictLabel.jpg)
+![fixed_one_xgbpredictLabel](out/figs/fixed_one_xgbpredictLabel.jpg)
 
 ​				Figure 7: fixed window predictions on the test set
 
